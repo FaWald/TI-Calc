@@ -307,4 +307,4 @@ def starter():
 # Starter-Funktion aufrufen
 if __name__ == "__main__":
     starter()
-    #extended_euclidean_algorithm(71, 15)
+
