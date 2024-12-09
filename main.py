@@ -267,11 +267,20 @@ def binary_multiplication_steps(bin1, bin2):
     print("\nEndergebnis:", result)
     return result
 
+
+def convert_number(number, convert):
+    result = 0
+    for digit in str(number):
+        result += digit * convert
+
+    return result
+
+
 def starter_counting_system():
     exit_value = True
     while exit_value:
         print("What subprogram do u want?")
-        print("0 = exit | 1 = + | 2 = - | 3 = *")
+        print("0 = exit | 1 = + | 2 = - | 3 = * | 4 = convert")
         value = int(input(">"))
         if value == 1:
             bit1 = input("bit1: ")
@@ -285,6 +294,10 @@ def starter_counting_system():
             bit1 = input("bit1: ")
             bit2 = input("bit2: ")
             binary_multiplication_steps(bit1, bit2)
+        elif value == 4:
+            number = input("bit1: ")
+            convert = input("bit2: ")
+            print(convert_number(number, convert))
         elif value == 0:
             exit_value = False
 
