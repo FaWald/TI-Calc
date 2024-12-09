@@ -270,8 +270,11 @@ def binary_multiplication_steps(bin1, bin2):
 
 def convert_number(number, convert):
     result = 0
+    length = len(number)
     for digit in str(number):
-        result += digit * convert
+        length -= 1
+        result += int(digit) * int(convert)**int(length)
+
 
     return result
 
@@ -295,8 +298,8 @@ def starter_counting_system():
             bit2 = input("bit2: ")
             binary_multiplication_steps(bit1, bit2)
         elif value == 4:
-            number = input("bit1: ")
-            convert = input("bit2: ")
+            number = input("number: ")
+            convert = input("convert: ")
             print(convert_number(number, convert))
         elif value == 0:
             exit_value = False
