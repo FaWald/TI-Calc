@@ -359,8 +359,6 @@ def starter():
         elif value == 0:
             exit_value = False
 
-
-
 # Starter-Funktion aufrufen
 if __name__ == "__main__":
     starter()
