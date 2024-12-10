@@ -93,14 +93,16 @@ def mod_inverse(e, phi):
 
 
 def check_rsa_keys(n, e, d):
-    """Überprüft die RSA-Schlüssel"""
+    """Überprüft die RSA-Schlüssel."""
     # Faktorisierung von n (nur für kleine Zahlen wie hier machbar)
+    p, q = None, None
     for i in range(2, n):
         if n % i == 0:
             p = i
             q = n // i
             break
-    else:
+
+    if p is None or q is None:
         return "n konnte nicht faktorisiert werden."
 
     # Berechnung von phi(n)
@@ -108,14 +110,14 @@ def check_rsa_keys(n, e, d):
 
     # Prüfen, ob e und phi teilerfremd sind
     if gcd(e, phi) != 1:
-        return f"e = {e} ist nicht teilerfremd zu PHI(n) = {phi}."
+        return "e = "+ str(e) +" ist nicht teilerfremd zu PHI(n) = "+ str(phi)
 
     # Berechnen, ob d das modulare Inverse von e modulo phi ist
     d_computed = mod_inverse(e, phi)
     if d_computed != d:
-        return f"d = {d} ist nicht das modulare Inverse von e = {e} modulo φ(n) = {phi}."
+        return "d = "+str(d)+" ist nicht das modulare Inverse von e = "+str(e)+" modulo PHI(n) = "+str(phi)
 
-    return f"Die Schlüssel sind korrekt: (n = {n}, e = {e}, d = {d})."
+    return "Die Schlüssel sind korrekt: (n = "+str(n)+", e = "+str(e)+", d = "+str(d)+")."
 
 
 
