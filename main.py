@@ -108,7 +108,7 @@ def check_rsa_keys(n, e, d):
 
     # Prüfen, ob e und phi teilerfremd sind
     if gcd(e, phi) != 1:
-        return f"e = {e} ist nicht teilerfremd zu φ(n) = {phi}."
+        return f"e = {e} ist nicht teilerfremd zu PHI(n) = {phi}."
 
     # Berechnen, ob d das modulare Inverse von e modulo phi ist
     d_computed = mod_inverse(e, phi)
