@@ -160,9 +160,12 @@ def starter_rsa():
     pass
 
 def binary_addition_steps(bin1, bin2):
+    # Manuelle Auffüllung mit Nullen auf gleiche Länge
     max_length = max(len(bin1), len(bin2))
-    bin1 = bin1.zfill(max_length)  # Füllt mit Nullen auf, um gleiche Länge zu erreichen
-    bin2 = bin2.zfill(max_length)
+    while len(bin1) < max_length:
+        bin1 = '0' + bin1
+    while len(bin2) < max_length:
+        bin2 = '0' + bin2
 
     result = []
     carry = 0
@@ -197,19 +200,29 @@ def binary_addition_steps(bin1, bin2):
             "Ergebnis-Bit": 1
         })
 
+    # Zwischenschritte ausgeben
     print("Zwischenschritte:")
-    for step in reversed(steps):
-        print(step)
+    for step in steps[::-1]:  # Umkehrung der Liste
+        print("Position: " + str(step["Position"]) +
+              ", Bit1: " + str(step["Bit1"]) +
+              ", Bit2: " + str(step["Bit2"]) +
+              ", Übertrag: " + str(step["Übertrag"]) +
+              ", Summe: " + str(step["Summe"]) +
+              ", Ergebnis-Bit: " + str(step["Ergebnis-Bit"]))
 
-    print("\nEndergebnis:", "".join(result))
+    # Endergebnis ausgeben
+    print("\nEndergebnis: " + "".join(result))
     return "".join(result)
+
 
 
 def binary_subtraction_steps(bin1, bin2):
     # Beide Zahlen gleich lang machen
     max_length = max(len(bin1), len(bin2))
-    bin1 = bin1.zfill(max_length)
-    bin2 = bin2.zfill(max_length)
+    while len(bin1) < max_length:
+        bin1 = '0' + bin1
+    while len(bin2) < max_length:
+        bin2 = '0' + bin2
 
     # Zweierkomplement von bin2 berechnen
     def twos_complement(binary):
@@ -217,15 +230,17 @@ def binary_subtraction_steps(bin1, bin2):
         inverted = ''.join('1' if b == '0' else '0' for b in binary)
         # Eins addieren
         result = binary_addition_steps(inverted, '1')
-        return result.zfill(max_length)
+        while len(result) < max_length:
+            result = '0' + result
+        return result
 
-    print(f"Binärzahl 1: {bin1}")
-    print(f"Binärzahl 2: {bin2}")
+    print("Binärzahl 1: " + bin1)
+    print("Binärzahl 2: " + bin2)
     print("Berechnung des Zweierkomplements von Binärzahl 2...")
 
     # Zweierkomplement von bin2 berechnen
     complement = twos_complement(bin2)
-    print(f"Zweierkomplement von Binärzahl 2: {complement}")
+    print("Zweierkomplement von Binärzahl 2: " + complement)
 
     # Addition von bin1 mit dem Zweierkomplement von bin2
     print("Addition der Binärzahl 1 mit dem Zweierkomplement von Binärzahl 2...")
@@ -233,41 +248,65 @@ def binary_subtraction_steps(bin1, bin2):
 
     # Prüfen, ob ein Übertrag (Carry-Out) vorhanden ist
     if len(result) > max_length:
-        result = result[1:]  # Entfernt den Übertrag
+        # Entfernt das erste Zeichen ohne `[1:]`
+        new_result = ""
+        for i in range(1, len(result)):
+            new_result += result[i]
+        result = new_result
         print("Übertrag entfernt (Carry-Out), Ergebnis ist positiv.")
     else:
         print("Kein Übertrag, Ergebnis ist negativ (Zweierkomplement).")
         result = "-" + twos_complement(result)
 
-    print(f"Endergebnis: {result}")
+    print("Endergebnis: " + result)
     return result
 
+def reverse_string(s):
+    """Dreht eine Zeichenkette manuell um."""
+    reversed_s = ""
+    for char in s:
+        reversed_s = char + reversed_s
+    return reversed_s
+
 def binary_multiplication_steps(bin1, bin2):
-    # Um die Zwischenschritte richtig zu berechnen, arbeiten wir von rechts nach links
-    bin1 = bin1[::-1]
-    bin2 = bin2[::-1]
+    # Zeichenketten manuell umdrehen
+    bin1 = reverse_string(bin1)
+    bin2 = reverse_string(bin2)
     partial_results = []
 
     # Für jedes Bit in der zweiten Zahl
     for i, bit in enumerate(bin2):
         if bit == '1':  # Wenn das aktuelle Bit 1 ist
-            partial_result = bin1[::-1] + '0' * i  # Verschieben um i Positionen nach links
+            partial_result = reverse_string(bin1) + '0' * i  # Verschieben um i Positionen nach links
         else:
             partial_result = '0' * (len(bin1) + i)  # Alles 0 für das Zwischenergebnis
 
-        partial_results.append(partial_result.zfill(len(bin1) + len(bin2)))
+        # Manuelles Auffüllen mit Nullen
+        while len(partial_result) < len(bin1) + len(bin2):
+            partial_result = '0' + partial_result
+
+        partial_results.append(partial_result)
 
     # Zwischenschritte anzeigen
     print("Zwischenschritte der Multiplikation:")
     for idx, step in enumerate(partial_results):
-        print(f"Schritt {idx + 1}: {step}")
+        print("Schritt " + str(idx + 1) + ": " + step)
 
     # Endergebnis berechnen, indem die Zwischenschritte im Dezimalformat summiert werden
-    result_decimal = sum(int(step, 2) for step in partial_results)
-    result = bin(result_decimal)[2:]  # Zurück in Binär konvertieren
+    result_decimal = 0
+    for step in partial_results:
+        result_decimal += int(step, 2)
+    result_binary = bin(result_decimal)[2:]  # Zurück in Binär konvertieren
 
-    print("\nEndergebnis:", result)
-    return result
+    # Entfernt das erste Zeichen ohne `[1:]`, wenn notwendig
+    if len(result_binary) > len(bin1) + len(bin2):
+        new_result = ""
+        for i in range(1, len(result_binary)):
+            new_result += result_binary[i]
+        result_binary = new_result
+
+    print("\nEndergebnis: " + result_binary)
+    return result_binary
 
 
 def convert_number(number, convert):
